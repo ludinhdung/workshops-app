@@ -1,4 +1,5 @@
 const pageTitle = "Workshops";
+
 // create an object that maps the url to the template, title, and description
 const routes = {
     404: {
