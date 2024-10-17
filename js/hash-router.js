@@ -1,3 +1,6 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
+
 const pageTitle = "Workshops";
 
 // create an object that maps the url to the template, title, and description
@@ -27,7 +30,42 @@ const routes = {
     title: "Book | " + pageTitle,
     description: "This is the booking page",
   },
+  customers: {
+    template: "/templates/customers.html",
+    title: "Registered Customers | " + pageTitle,
+    description: "View all registered customers",
+  },
+  bracelet: {
+    template: "/templates/bracelet.html",
+    title: "Bracelet Workshop | " + pageTitle,
+    description: "Learn about our bracelet making workshop",
+  },
+  candle: {
+    template: "/templates/candle.html",
+    title: "Candle Making Workshop | " + pageTitle,
+    description: "Explore our candle making workshop",
+  },
+  canvas: {
+    template: "/templates/canvas.html",
+    title: "Canvas Painting Workshop | " + pageTitle,
+    description: "Discover our canvas painting workshop",
+  },
 };
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDWWCb5kfeWsvNWPAwmvUCer44d12Ugw30",
+  authDomain: "real-time-project-cc45a.firebaseapp.com",
+  databaseURL: "https://real-time-project-cc45a-default-rtdb.asia-southeast1.firebasedatabase.app/",
+  projectId: "real-time-project-cc45a",
+  storageBucket: "real-time-project-cc45a.appspot.com",
+  messagingSenderId: "741778298870",
+  appId: "1:741778298870:web:aa00d2dacbe9dc8bd6d9d7",
+  measurementId: "G-FLYXYECFST"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const database = getDatabase(app);
 
 const locationHandler = async () => {
   // get the url path, replace hash with empty string
@@ -55,36 +93,8 @@ const locationHandler = async () => {
     .querySelector('meta[name="description"]')
     .setAttribute("content", route.description);
 
-  // Check if the current route is the booking page, and attach the form event listener
-  if (location === "book") {
-    document
-      .getElementById("bookingFormData")
-      .addEventListener("submit", function (event) {
-        event.preventDefault();
-
-        // Get form values
-        const name = document.getElementById("inputName").value;
-        const email = document.getElementById("inputEmail").value;
-        const phone = document.getElementById("inputPhone").value;
-        const date = document.getElementById("inputDate").value;
-        const cate = document.getElementById("inputCategory").value;
-        const notes = document.getElementById("inputNotes").value;
-
-        // Log values to console (or process the data)
-        console.log("Name:", name);
-        console.log("Email:", email);
-        console.log("Phone:", phone);
-        console.log("Date:", date);
-        console.log("Category:", cate);
-        console.log("Notes:", notes);
-
-        // Reset the form
-        document.getElementById("bookingFormData").reset();
-
-        // Show success modal
-        $("#successModal").modal("show"); // Assuming you're using Bootstrap for modal handling
-      });
-  }
+  // After loading the content, initialize Firebase and set up the booking form
+  initializeFirebaseAndBookingForm();
 
   if (location === "/") {
     $(document).ready(function () {
@@ -125,6 +135,10 @@ const locationHandler = async () => {
       });
     });
   }
+  if (location === "customers") {
+    console.log("Customers page loaded");
+    fetchAndDisplayCustomers();
+  }
 };
 
 // Watch for hash changes and call locationHandler
@@ -132,3 +146,98 @@ window.addEventListener("hashchange", locationHandler);
 
 // Call locationHandler on page load
 locationHandler();
+
+// New function to initialize Firebase and set up the booking form
+function initializeFirebaseAndBookingForm() {
+  const form = document.getElementById("bookingFormData");
+  if (form) {
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      // Get form values
+      const name = document.getElementById("inputName").value;
+      const email = document.getElementById("inputEmail").value;
+      const phone = document.getElementById("inputPhone").value;
+      const date = document.getElementById("inputDate").value;
+      const cate = document.getElementById("inputCategory").value;
+      const notes = document.getElementById("inputNotes").value;
+
+      // Create a booking object
+      const bookingData = {
+        name,
+        email,
+        phone,
+        date,
+        category: cate,
+        notes,
+        timestamp: new Date().toISOString()
+      };
+
+      // Push the booking data to Firebase
+      push(ref(database, 'bookings'), bookingData)
+        .then(() => {
+          console.log("Booking added successfully");
+          // Reset the form
+          form.reset();
+          // Show success modal
+          $("#successModal").modal("show");
+        })
+        .catch((error) => {
+          console.error("Error adding booking: ", error);
+          // Optionally, show an error message to the user
+        });
+    });
+  }
+}
+
+function fetchAndDisplayCustomers() {
+  console.log("Fetching customers...");
+  const customersRef = ref(database, 'bookings');
+  onValue(customersRef, (snapshot) => {
+    console.log("Snapshot received:", snapshot.val());
+    const data = snapshot.val();
+    const customerList = document.getElementById('customerList');
+    customerList.innerHTML = ''; // Clear existing content
+
+    if (data) {
+      console.log("Customer data found:", data);
+      // Create table
+      const table = document.createElement('table');
+      table.className = 'table table-striped table-hover';
+      table.innerHTML = `
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Date</th>
+            <th>Category</th>
+            <th>Note</th>
+          </tr>
+        </thead>
+        <tbody id="customerTableBody">
+        </tbody>
+      `;
+      customerList.appendChild(table);
+
+      const tableBody = document.getElementById('customerTableBody');
+      Object.entries(data).forEach(([key, value]) => {
+        console.log("Processing customer:", value);
+        const row = tableBody.insertRow();
+        row.innerHTML = `
+          <td>${value.name || 'N/A'}</td>
+          <td>${value.email || 'N/A'}</td>
+          <td>${value.phone || 'N/A'}</td>
+          <td>${value.date || 'N/A'}</td>
+          <td>${value.category || 'N/A'}</td>
+          <td>${value.notes || 'N/A'}</td>
+        `;
+      });
+    } else {
+      console.log("No customer data found");
+      customerList.innerHTML = '<p>No customers found.</p>';
+    }
+  });
+}
+
+export { locationHandler };
