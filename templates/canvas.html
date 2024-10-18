@@ -1,1 +1,338 @@
-<h1>Canvas Painting Workshop</h1>
+<header class="header_section">
+  <div class="container">
+    <nav class="navbar navbar-expand-lg custom_nav-container">
+      <a class="navbar-brand" href="/">
+        <span style="font-size: 2.5rem; color: #ffd700; letter-spacing: 1px">
+          Wizard Workshop
+        </span>
+      </a>
+
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class=""></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mx-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="/" style="color: #edeae5"
+              >Home <span class="sr-only">(current)</span></a
+            >
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#workshop" style="color: #edeae5"
+              >Workshops</a
+            >
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#about" style="color: #edeae5">About</a>
+          </li>
+        </ul>
+
+        <div class="user_option">
+          <a
+            href="#book"
+            class="order_online"
+            style="background-color: #fce181; color: #026670"
+          >
+            Booking Online
+          </a>
+        </div>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<!-- Product Detail Section -->
+<section class="product-detail py-5">
+  <div class="container">
+    <div class="row">
+      <!-- Product Image -->
+      <div class="col-md-6">
+        <div class="product-image">
+          <img
+            id="mainImage"
+            src="images/client2.jpg"
+            alt="Candle Workshop"
+            class="img-fluid"
+            style="height: 570px; width: 4500px"
+          />
+        </div>
+      </div>
+      <!-- Product Info -->
+      <div class="col-md-6">
+        <h2>Fragrant Bag Workshop</h2>
+        <div class="product-rating mb-3">
+          <span class="rating">★★★☆☆</span>
+          <span>(21 reviews)</span>
+        </div>
+        <div class="product-price">
+          <h3>250,000 VND</h3>
+        </div>
+        <p>
+          Unleash your creativity with our DIY fragrant bag kit! You can
+          decorate and personalize your bag to match your own style. Add warmth
+          and fragrance to your space with a product designed entirely by you!
+        </p>
+        <p>
+          This isn’t just a workshop; it’s an opportunity to express your
+          creativity while learning a new skill you can continue to practice at
+          home. Plus, it’s a relaxing and rewarding experience—perfect for
+          anyone looking to unwind or bond with friends and family. All
+          materials will be provided, so all you need to bring is your
+          enthusiasm and creativity. At the end of the workshop, you’ll take
+          home your custom-made fragrant bag, beautifully crafted by you!
+        </p>
+
+        <div class="product-thumbnails mt-3 d-flex justify-content-between">
+          <img
+            onclick="changeImage('images/OIP.jpg')"
+            src="images/scented.png"
+            alt="Candle Thumbnail 1"
+            class="img-thumbnail thumbnail-img"
+          />
+          <img
+            onclick="changeImage('images/OIP2.jpg')"
+            src="images/spented2.jpg"
+            alt="Candle Thumbnail 2"
+            class="img-thumbnail thumbnail-img"
+          />
+          <img
+            onclick="changeImage('images/OIP3.jpg')"
+            src="images/spented3.jpg"
+            alt="Candle Thumbnail 3"
+            class="img-thumbnail thumbnail-img"
+          />
+        </div>
+        <!-- <button class="order_online">Booking Now</button> -->
+        <a href="#book" class="btn btn-primary btn-booking">Booking Now</a>
+      </div>
+    </div>
+
+    <!-- Tab Section -->
+    <div class="row mt-5">
+      <div class="col-12">
+        <ul class="nav nav-tabs">
+          <li class="nav-item">
+            <a class="nav-link active" data-toggle="tab" href="#description"
+              >Description</a
+            >
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#information"
+              >Information</a
+            >
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#reviews"
+              >Cancellation policy</a
+            >
+          </li>
+        </ul>
+
+        <div class="tab-content mt-3">
+          <div id="description" class="tab-pane fade show active">
+            <p>
+              In this hands-on workshop, you'll learn the basics of creating
+              your own personalized fragrant bag to take home. Choose from a
+              variety of scents and colors to design the perfect aromatic
+              accessory.
+            </p>
+            <p>
+              How to Make Fragrant Bags: You'll begin by selecting the fabric
+              and fragrance materials. Then, you’ll cut and sew the fabric, fill
+              the bag with your chosen scents, and finish it off with decorative
+              elements. Finally, you’ll have a beautifully crafted fragrant bag
+              that reflects your unique style!
+            </p>
+          </div>
+          <div id="information" class="tab-pane fade">
+            <p>
+              Duration: 2 hours | Materials included | No prior experience
+              required
+            </p>
+            <p>**Time**: From 2:00 PM to 4:00 PM</p>
+            <p>**Location**: Ngũ Hành Sơn District, Đà Nẵng city</p>
+          </div>
+          <div id="reviews" class="tab-pane fade">
+            <p>**Cancellation Policy**:</p>
+            <ul>
+              <li>
+                A 4% cancellation fee will apply if the order is canceled at
+                least 50 days before the selected date.
+              </li>
+              <li>
+                A 0% cancellation fee will apply if the order is canceled within
+                the period between 3 to 100 days before the selected date.
+              </li>
+              <li>
+                Note: The cancellation policy depends on the time zone defined
+                by the supplier. Cancellation requests require 2-5 business days
+                to process and confirm. The cancellation fee will be based on
+                the supplier's cancellation policy at the time of your booking.
+                After the cancellation is confirmed, a refund will be issued
+                within 14 business days.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Related Products Section -->
+    <div class="related-products mt-5">
+      <h3>Related Workshops</h3>
+      <div class="row">
+        <div class="col-sm-6 col-lg-4">
+          <div class="box">
+            <div class="img-box">
+              <a href="#bracelet">
+                <img
+                  src="images/f3.png"
+                  alt="Bracelet Making"
+                  style="width: 100%"
+              /></a>
+            </div>
+            <div class="detail-box">
+              <h5>Bracelet Making</h5>
+              <p>100,000 VND</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-lg-4">
+          <div class="box">
+            <div class="img-box">
+              <a href="#candle">
+                <img
+                  src="images/f1.png"
+                  alt="Pottery Workshop"
+                  style="width: 100%"
+              /></a>
+            </div>
+            <div class="detail-box">
+              <h5>Candle Workshop</h5>
+              <p>150,000 VND</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer Section -->
+<footer class="footer_section">
+  <div class="container">
+    <div class="footer_container">
+      <div class="row">
+        <div class="col-md-6 footer-col">
+          <h4 style="color: #9fedd7">About Us</h4>
+          <p style="color: #edeae5">
+            Our workshop provides a creative and welcoming space for individuals
+            to explore their artistic side. We offer various workshops, from
+            candle-making to canvas painting, and more!
+          </p>
+        </div>
+        <div class="col-md-6 footer-col">
+          <h4 style="color: #9fedd7">Contact</h4>
+          <div class="contact_link_box">
+            <a
+              href=""
+              style="
+                display: block;
+                margin-bottom: 10px;
+                color: #d1e2e4;
+                text-decoration: none;
+              "
+            >
+              <i
+                class="fa fa-map-marker"
+                aria-hidden="true"
+                style="margin-right: 10px"
+              ></i>
+              <span>Location</span>
+            </a>
+            <a
+              href=""
+              style="
+                display: block;
+                margin-bottom: 10px;
+                color: #d1e2e4;
+                text-decoration: none;
+              "
+            >
+              <i
+                class="fa fa-phone"
+                aria-hidden="true"
+                style="margin-right: 10px"
+              ></i>
+              <span>Call +01 1234567890</span>
+            </a>
+            <a
+              href=""
+              style="
+                display: block;
+                margin-bottom: 10px;
+                color: #d1e2e4;
+                text-decoration: none;
+              "
+            >
+              <i
+                class="fa fa-envelope"
+                aria-hidden="true"
+                style="margin-right: 10px"
+              ></i>
+              <span>workshop@gmail.com</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+<script>
+  function changeImage(imageSrc) {
+    document.getElementById("mainImage").src = imageSrc;
+  }
+</script>
+<style>
+  .thumbnail-img {
+    width: 150px; /* Điều chỉnh kích thước cho to ra */
+    height: 150px; /* Chiều cao bằng nhau */
+    object-fit: cover; /* Đảm bảo ảnh không bị méo */
+    margin-right: 10px; /* Khoảng cách giữa các ảnh */
+  }
+
+  .product-thumbnails {
+    justify-content: space-evenly; /* Đảm bảo các ảnh cách đều nhau */
+  }
+
+  .product-image img {
+    max-width: 100%;
+    height: auto;
+  }
+  .btn-booking {
+    background-color: #ffd700; /* Màu nền của nút */
+    border: none; /* Bỏ viền */
+    color: white; /* Màu chữ */
+    padding: 10px 20px; /* Khoảng cách bên trong nút */
+    text-align: center; /* Căn giữa chữ */
+    text-decoration: none; /* Bỏ gạch dưới */
+    display: inline-block;
+    font-size: 16px; /* Cỡ chữ */
+    font-weight: bold; /* Chữ đậm */
+    border-radius: 30px; /* Bo tròn góc nút */
+    transition: background-color 0.3s ease; /* Hiệu ứng khi hover */
+  }
+
+  .btn-booking:hover {
+    background-color: #ff8c73; /* Màu khi hover */
+  }
+</style>
