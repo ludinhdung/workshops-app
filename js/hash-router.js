@@ -232,10 +232,10 @@ const locationHandler = async () => {
     }
 
     const workshopPrices = {
-      "Candle workshop": 150000,
-      "Canvas Painting": 200000,
-      "Bracelet-making": 100000,
-      "Fragrant Bag": 120000 // Add price for Fragrant Bag if needed
+      "Candle workshop": 150.000,
+      "Canvas Painting": 200.000,
+      "Bracelet-making": 100.000,
+      "Scented Bag": 200.000 // Add price for Fragrant Bag if needed
     };
 
     // Function to calculate total amount
@@ -296,10 +296,10 @@ function initializeFirebaseAndBookingForm() {
       }
 
       const workshopPrices = {
-        "Candle workshop": 150000,
-        "Canvas Painting": 200000,
-        "Bracelet-making": 100000,
-        "Fragrant Bag": 120000 
+        "Candle workshop": 150.000,
+        "Canvas Painting": 200.000,
+        "Bracelet-making": 100.000,
+        "Scented Bag": 200.000 
       };
 
       // Function to calculate total amount
