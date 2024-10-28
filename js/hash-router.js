@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
+import { getDatabase, ref, push, onValue, update } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
 
 const pageTitle = "Workshops";
 
@@ -49,6 +49,11 @@ const routes = {
     template: "/templates/canvas.html",
     title: "Canvas Painting Workshop | " + pageTitle,
     description: "Discover our canvas painting workshop",
+  },
+  dashboard: {
+    template: "/templates/dashboard.html", // New template for the dashboard
+    title: "Dashboard | " + pageTitle,
+    description: "View and manage your bookings",
   },
 };
 
@@ -135,9 +140,129 @@ const locationHandler = async () => {
       });
     });
   }
+
   if (location === "customers") {
     console.log("Customers page loaded");
     fetchAndDisplayCustomers();
+  }
+
+  if (location === "dashboard") {
+    function calculateTotalPaidAmount() {
+      const customersRef = ref(database, 'bookings');
+      onValue(customersRef, (snapshot) => {
+        const data = snapshot.val();
+        let totalPaid = 0;
+
+        if (data) {
+          Object.values(data).forEach((booking) => {
+            if (booking.isPaid) {
+              totalPaid += booking.totalAmount;
+            }
+          });
+        }
+
+        document.getElementById("totalAmount").textContent = totalPaid + " VND"; // Cập nhật giá trị
+      });
+    }
+
+    function updateWorkshopStats() {
+      const customersRef = ref(database, 'bookings');
+      onValue(customersRef, (snapshot) => {
+        const data = snapshot.val();
+        const workshopCounts = {
+          "Candle workshop": 0,
+          "Canvas Painting": 0,
+          "Bracelet-making": 0,
+          "Fragrant Bag": 0
+        };
+
+        if (data) {
+          Object.values(data).forEach((booking) => {
+            if (booking.isPaid) {
+              workshopCounts[booking.category] = (workshopCounts[booking.category] || 0) + 1; // Tăng số lượng cho loại workshop tương ứng
+            }
+          });
+        }
+
+        const workshopStatsBody = document.getElementById('workshopStatsBody');
+        workshopStatsBody.innerHTML = '';
+
+        Object.entries(workshopCounts).forEach(([category, count]) => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${category}</td>
+            <td>${count}</td>
+          `;
+          workshopStatsBody.appendChild(row); // Thêm hàng vào bảng
+        });
+      });
+    }
+
+    updateWorkshopStats();
+
+    calculateTotalPaidAmount();
+  }
+  if (location === "book") {
+
+    function fetchAvailableSeats(category) {
+      const seatsRef = ref(database, 'availableSeats'); // Adjust the path as necessary
+      onValue(seatsRef, (snapshot) => {
+        const availableSeats = snapshot.val();
+        console.log("Available seats:", availableSeats);
+
+        // Get the number of available seats for the selected category
+        const seatsCount = availableSeats[category] || 0; // Default to 0 if category not found
+        console.log(`Available seats for category "${category}":`, seatsCount);
+
+        // Set the value of seatsCount to the input field
+        document.getElementById("availableSeats").textContent = seatsCount;
+        // You can add logic here to update the UI with the available seats count
+      });
+    }
+
+
+
+    // Add event listener to the category input in the booking form
+    const categoryInput = document.getElementById("inputCategory");
+    if (categoryInput) {
+      categoryInput.addEventListener("change", function () {
+        const selectedCategory = this.value; // Get the selected category
+        fetchAvailableSeats(selectedCategory); // Fetch available seats for the selected category
+      });
+    }
+
+    const workshopPrices = {
+      "Candle workshop": 150000,
+      "Canvas Painting": 200000,
+      "Bracelet-making": 100000,
+      "Fragrant Bag": 120000 // Add price for Fragrant Bag if needed
+    };
+
+    // Function to calculate total amount
+    function calculateTotal() {
+      let total = 0;
+      const selectedCategory = document.getElementById("inputCategory").value;
+      const seatsCount = parseInt(document.getElementById("inputSeats").value) || 0; // Get the number of seats
+
+      // Calculate total based on selected category
+      if (selectedCategory && workshopPrices[selectedCategory]) {
+        total += seatsCount * workshopPrices[selectedCategory]; // Multiply by the price of the selected workshop
+      }
+
+      return total;
+    }
+
+    document.getElementById('showTotalCheckbox').addEventListener('change', function () {
+      var totalAmountContainer = document.getElementById('totalAmountContainer');
+      var totalAmount = document.getElementById('totalAmount');
+
+      if (this.checked) {
+        totalAmountContainer.style.display = 'flex';
+        totalAmount.textContent = calculateTotal() + " VND"; // Update total amount
+      } else {
+        totalAmountContainer.style.display = 'none';
+      }
+    });
   }
 };
 
@@ -161,6 +286,60 @@ function initializeFirebaseAndBookingForm() {
       const date = document.getElementById("inputDate").value;
       const cate = document.getElementById("inputCategory").value;
       const notes = document.getElementById("inputNotes").value;
+      const seats = document.getElementById("inputSeats").value;
+
+
+      if (parseInt(seats) > parseInt(document.getElementById("availableSeats").textContent)) {
+        document.getElementById("seatsValidationMessage").style.display = "block";
+        document.getElementById("seatsValidationMessage").textContent = "You have requested more seats than available. Please adjust your request.";
+        return;
+      }
+
+      const workshopPrices = {
+        "Candle workshop": 150000,
+        "Canvas Painting": 200000,
+        "Bracelet-making": 100000,
+        "Fragrant Bag": 120000 
+      };
+
+      // Function to calculate total amount
+      function calculateTotal() {
+        let total = 0;
+        const selectedCategory = document.getElementById("inputCategory").value;
+        const seatsCount = parseInt(document.getElementById("inputSeats").value) || 0; // Get the number of seats
+
+        // Calculate total based on selected category
+        if (selectedCategory && workshopPrices[selectedCategory]) {
+          total += seatsCount * workshopPrices[selectedCategory]; // Multiply by the price of the selected workshop
+        }
+
+        return total;
+      }
+
+      const totalAmount = calculateTotal();
+
+      function updateAvailableSeats(category, seats) {
+        const seatsRef = ref(database, 'availableSeats'); // Adjust the path as necessary
+
+        onValue(seatsRef, (snapshot) => {
+          const availableSeats = snapshot.val();
+          const currentSeats = availableSeats[category] || 0;
+          const newSeats = currentSeats - seats;
+
+          console.log(`Updating available seats for category "${category}" to:`, newSeats);
+
+          update(ref(database, 'availableSeats'), {
+            [category]: newSeats
+          })
+            .then(() => {
+              console.log("Available seats updated successfully");
+            })
+            .catch((error) => {
+              console.error("Error updating available seats: ", error);
+            });
+        }, { onlyOnce: true });
+
+      }
 
       // Create a booking object
       const bookingData = {
@@ -169,15 +348,26 @@ function initializeFirebaseAndBookingForm() {
         phone,
         date,
         category: cate,
+        seats,
+        isPaid: false,
+        totalAmount,
         notes,
         timestamp: new Date().toISOString()
       };
+
 
       // Push the booking data to Firebase
       push(ref(database, 'bookings'), bookingData)
         .then(() => {
           console.log("Booking added successfully");
+
+          updateAvailableSeats(cate, parseInt(seats));
           // Reset the form
+          document.getElementById("availableSeats").textContent = "Not Available"
+          document.getElementById("seatsValidationMessage").style.display = "none";
+          document.getElementById('showTotalCheckbox').checked = false;
+          document.getElementById('totalAmountContainer').style.display = 'none';
+
           form.reset();
           // Show success modal
           $("#successModal").modal("show");
@@ -210,9 +400,11 @@ function fetchAndDisplayCustomers() {
             <th>Name</th>
             <th>Email</th>
             <th>Phone</th>
-            <th>Date</th>
             <th>Category</th>
+            <th>Number of seats</th>
+            <th>Total amount</th>
             <th>Note</th>
+            <th>Action</th> <!-- New column for action -->
           </tr>
         </thead>
         <tbody id="customerTableBody">
@@ -228,10 +420,21 @@ function fetchAndDisplayCustomers() {
           <td>${value.name || 'N/A'}</td>
           <td>${value.email || 'N/A'}</td>
           <td>${value.phone || 'N/A'}</td>
-          <td>${value.date || 'N/A'}</td>
           <td>${value.category || 'N/A'}</td>
+          <td>${value.seats || 'N/A'}</td>
+          <td>${value.totalAmount + " VND" || 'N/A'}</td>
           <td>${value.notes || 'N/A'}</td>
+          <td>
+            ${value.isPaid ? 'Paid' : `<button class="btn btn-primary mark-as-paid" id="${key}">Mark as Paid</button>`} <!-- Button to mark as paid -->
+          </td>
         `;
+        // Add event listener to the "Mark as Paid" button
+        const markAsPaidButton = row.querySelector('.mark-as-paid');
+        if (markAsPaidButton) {
+          markAsPaidButton.addEventListener('click', function () {
+            markAsPaid(key); // Call markAsPaid with the booking ID
+          });
+        }
       });
     } else {
       console.log("No customer data found");
@@ -240,4 +443,29 @@ function fetchAndDisplayCustomers() {
   });
 }
 
+// New function to mark a booking as paid
+function markAsPaid(bookingId) {
+  // Add confirmation dialog
+  if (confirm("Are you sure you want to mark this booking as paid?")) {
+    const bookingRef = ref(database, `bookings/${bookingId}`);
+
+    // Attempt to update the booking status
+    update(bookingRef, { isPaid: true }) // Use the update function here
+      .then(() => {
+        console.log("Booking marked as paid successfully");
+        fetchAndDisplayCustomers(); // Refresh the customer list
+      })
+      .catch((error) => {
+        console.error("Error marking booking as paid: ", error);
+        alert("There was an error marking the booking as paid. Please try again."); // Notify the user
+      });
+  } else {
+    console.log("Booking marking as paid was canceled.");
+  }
+}
+
+
+
 export { locationHandler };
+
+

@@ -1,10 +1,10 @@
-<div class="about_area" style="background-color: #e0e9ea;">
+<div class="about_area">
     <!-- header section starts -->
     <header class="header_section">
         <div class="container">
             <nav class="navbar navbar-expand-lg custom_nav-container">
                 <a class="navbar-brand" href="/">
-                    <span style=" font-size: 2.5rem; color: #FFD700; letter-spacing: 1px;">
+                    <span style="font-size: 2.5rem; color: #FFD700; letter-spacing: 1px;">
                         Wizard Workshop
                     </span>
                 </a>
@@ -38,116 +38,142 @@
     </header>
     <!-- end header section -->
 
-    
-    <!-- <div> <!-- Start Form -->
-        <form style="width: 40%; margin: 30px auto;" id="bookingFormData" class="needs-validation" validated
-            autocomplete="off" method="post">
-            <!-- Start Input Name -->
-            <div class="form-group">
+    <form
+        style="width: 60%; margin: 50px auto; background-color: #ffffff; padding: 30px; border-radius: 10px; box-shadow: 0 0 20px rgba(0,0,0,0.1);"
+        id="bookingFormData" class="needs-validation" validated autocomplete="off" method="post">
+        <h2 class="text-center mb-4" style="color: #026670;">Book Your Workshop</h2>
+
+        <div class="form-row">
+            <div class="form-group col-md-6">
                 <label for="inputName">Name</label>
                 <input type="text" class="form-control" id="inputName" name="name" placeholder="Your name" required />
-                <small class="form-text text-muted">Please fill your name</small>
             </div>
-            <!-- End Input Name -->
-
-            <!-- Start Input Email -->
-            <div class="form-group">
+            <div class="form-group col-md-6">
                 <label for="inputEmail">Email</label>
                 <input type="email" class="form-control" id="inputEmail" name="email" placeholder="Enter email"
                     pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" required />
-                <small class="form-text text-muted">We'll never share your email with anyone else.</small>
             </div>
-            <!-- End Input Email -->
+        </div>
 
-            <!-- Start Input Telephone -->
-            <div class="form-group">
+        <div class="form-row">
+            <div class="form-group col-md-6">
                 <label for="inputPhone">Phone</label>
                 <input type="tel" class="form-control" id="inputPhone" name="phone" placeholder="099xxxxxxx"
                     pattern="\d{3}\d{3}\d{4}" required />
-                <small class="form-text text-muted">We'll never share your phone number with anyone else.</small>
             </div>
-            <!-- End Input Telephone -->
-
-            <div class="form-row">
-                <div class="form-group ">
-                    <label for="inputDate">Date</label>
-                    <input type="date" class="form-control" id="inputDate" name="date" required />
-                    <small class="form-text text-muted">Please choose date and time for workshop.</small>
-                </div>
+            <div class="form-group col-md-6">
+                <label for="inputDate">Date of birth</label>
+                <input type="date" class="form-control" id="inputDate" name="date" required />
             </div>
+        </div>
 
-            <div class="form-row">
+        <div class="form-row">
+            <div class="form-group col-md-6">
                 <label for="inputCategory">Workshop category</label>
-                <select class="form-control mr-1" id="inputCategory" name="inputCategory" required>
+                <select class="form-control" id="inputCategory" name="inputCategory" required>
                     <option value="" disabled selected>Select workshop</option>
                     <option value="Candle workshop">Candle workshop</option>
                     <option value="Canvas Painting">Canvas Painting</option>
                     <option value="Bracelet-making">Bracelet-making</option>
+                    <option value="Fragrant Bag">Fragrant Bag</option>
                 </select>
-                <small class="form-text text-muted">Please choose workshop category.</small>
             </div>
-
-            <hr />
-
-            <div class="form-group">
-                <label for="inputNotes">Notes</label>
-                <textarea class="form-control" name="remark" id="inputNotes" rows="2"
-                    placeholder="Tell us you want more..."></textarea>
+            <div class="form-group col-md-6">
+                <label for="inputSeats">Number of Seats</label>
+                <input type="number" class="form-control" id="inputSeats" name="seats" placeholder="Number of seats"
+                    min="1" required oninput="calculateTotal()" />
+                <div id="seatsValidationMessage" style="color: red;margin: 5px; display: none;"></div>
+                <!-- Validation message added -->
             </div>
+            <div class="form-group col-md-6">
+                <label for="availableSeats">Available Seats: </label>
+                <div id="availableSeats" style="display: inline-block;color: red;">
+                    Not Available
+                </div>
+            </div>
+        </div>
 
-            <button class="btn col-lg-2" style="background-color: #FCE181; color: #026670;;"
-                type="submit">Submit</button>
-        </form>
-    </div>
 
-    <!-- footer section -->
-    <footer class="footer_section">
-        <div class="container">
-            <div class="footer_container">
-                <div class="row">
-                    <div class="col-md-6 footer-col">
-                        <h4 style="color: #9FEDD7;">
-                            About Us
-                        </h4>
-                        <p style="color: #EDEAE5;">
-                            Our workshop provides a creative and welcoming space for individuals to explore their
-                            artistic side. We
-                            offer various workshops, from candle-making to canvas painting, and more!
-                        </p>
+        <div class="form-group">
+            <label for="inputNotes">Notes</label>
+            <textarea class="form-control" name="remark" id="inputNotes" rows="3"
+                placeholder="Tell us you want more..."></textarea>
+        </div>
+
+        <div class="form-group">
+            <input type="checkbox" id="showTotalCheckbox" required/>
+            <label for="showTotalCheckbox">Bank Transfer Payment</label>
+        </div>
+
+
+        <div class="form-group col-md" id="totalAmountContainer"
+            style=" display: none; justify-content: space-between; align-items: start; padding: 15px;">
+            <div>
+                <span style="font-weight: bold; display: inline; border: none;">Total Amount: </span>
+                <span id="totalAmount" class="form-control" style="border: none; font-size: 1.3rem; display: inline;">
+                    0
+                </span>
+                <div style="font-weight: bold; border: none;">Content: </div> <!-- Removed color style -->
+            </div>
+            <img src="https://st.quantrimang.com/photos/image/2017/11/21/Vietcombank-QR-Pay-ma-QR.jpg" alt=""
+                style="max-width: 250px; height: auto;" /> <!-- Increased max-width -->
+        </div>
+
+
+        <div class="text-center">
+            <button class="btn btn-lg"
+                style="background-color: #FCE181; color: #026670; padding: 10px 30px; border-radius: 5px; transition: background-color 0.3s;"
+                type="submit">Book Now</button>
+        </div>
+    </form>
+
+</div>
+
+<!-- footer section -->
+<footer class="footer_section">
+    <div class="container">
+        <div class="footer_container">
+            <div class="row">
+                <div class="col-md-6 footer-col">
+                    <h4 style="color: #9FEDD7;">
+                        About Us
+                    </h4>
+                    <p style="color: #EDEAE5;">
+                        Our workshop provides a creative and welcoming space for individuals to explore their
+                        artistic side. We
+                        offer various workshops, from candle-making to canvas painting, and more!
+                    </p>
+                </div>
+                <div class="col-md-6 footer-col">
+                    <h4 style="color: #9FEDD7;">
+                        Contact
+                    </h4>
+                    <div class="contact_link_box">
+                        <a href="" style="display: block; margin-bottom: 10px; color: #d1e2e4; text-decoration: none;">
+                            <i class="fa fa-map-marker" aria-hidden="true" style="margin-right: 10px;"></i>
+                            <span>Location</span>
+                        </a>
+                        <a href="" style="display: block; margin-bottom: 10px; color: #d1e2e4; text-decoration: none;">
+                            <i class="fa fa-phone" aria-hidden="true" style="margin-right: 10px;"></i>
+                            <span>Call +01 1234567890</span>
+                        </a>
+                        <a href="" style="display: block; margin-bottom: 10px; color: #d1e2e4; text-decoration: none;">
+                            <i class="fa fa-envelope" aria-hidden="true" style="margin-right: 10px;"></i>
+                            <span>demo@gmail.com</span>
+                        </a>
                     </div>
-                    <div class="col-md-6 footer-col">
-                        <h4 style="color: #9FEDD7;">
-                            Contact
-                        </h4>
-                        <div class="contact_link_box">
-                            <a href=""
-                                style="display: block; margin-bottom: 10px; color: #d1e2e4; text-decoration: none;">
-                                <i class="fa fa-map-marker" aria-hidden="true" style="margin-right: 10px;"></i>
-                                <span>Location</span>
-                            </a>
-                            <a href=""
-                                style="display: block; margin-bottom: 10px; color: #d1e2e4; text-decoration: none;">
-                                <i class="fa fa-phone" aria-hidden="true" style="margin-right: 10px;"></i>
-                                <span>Call +01 1234567890</span>
-                            </a>
-                            <a href=""
-                                style="display: block; margin-bottom: 10px; color: #d1e2e4; text-decoration: none;">
-                                <i class="fa fa-envelope" aria-hidden="true" style="margin-right: 10px;"></i>
-                                <span>demo@gmail.com</span>
-                            </a>
-                        </div>
-                        <div class="footer_social" style="margin-top: 10px;">
-                            <a href="https://www.facebook.com/profile.php?id=61566553944025&mibextid=LQQJ4d"
-                                style="color: #026670;">
-                                <i class="fa fa-facebook" aria-hidden="true"></i>
-                            </a>
-                        </div>
+                    <div class="footer_social" style="margin-top: 10px;">
+                        <a href="https://www.facebook.com/profile.php?id=61566553944025&mibextid=LQQJ4d"
+                            style="color: #026670;">
+                            <i class="fa fa-facebook" aria-hidden="true"></i>
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
-    </footer>
-    <!-- end footer section -->
+    </div>
+</footer>
+<!-- end footer section -->
 </div>
 
 <!-- Success Modal -->

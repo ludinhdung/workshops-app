@@ -46,7 +46,6 @@
       <!-- header section starts -->
       <header class="header_section">
         <div class="container">
-
           <nav class="navbar navbar-expand-lg custom_nav-container">
             <a class="navbar-brand" href="/">
               <span style="font-size: 2.5rem; color: #FFD700; letter-spacing: 1px;">
@@ -370,6 +369,7 @@
 </body>
 <script type="module" src="/js/hash-router.js"></script>
 
+
 <script src="js/jquery-3.4.1.min.js"></script>
 <!-- popper js -->
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
@@ -386,7 +386,38 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/js/jquery.nice-select.min.js"></script>
 <!-- custom js -->
 <script src="js/custom.js"></script>
+
 <!-- Google Map -->
 </script>                                             
 <!-- End Google Map -->
+
+<script>
+    // Example amounts for workshops
+    const workshopPrices = {
+        candle: 150000,
+        canvas: 200000,
+        bracelet: 100000
+    };
+
+    // Function to calculate total amount
+    function calculateTotal() {
+        let total = 0;
+        // Add logic to calculate total based on selected workshops
+        // For example, if a user selects a candle workshop:
+        total += workshopPrices.candle; // Adjust this based on user selections
+        return total;
+    }
+
+    document.getElementById('showTotalCheckbox').addEventListener('change', function() {
+        var totalAmountContainer = document.getElementById('totalAmountContainer');
+        var totalAmount = document.getElementById('totalAmount');
+
+        if (this.checked) {
+            totalAmountContainer.style.display = 'block';
+            totalAmount.textContent = calculateTotal(); // Update total amount
+        } else {
+            totalAmountContainer.style.display = 'none';
+        }
+    });
+</script>
 </html>
