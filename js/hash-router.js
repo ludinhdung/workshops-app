@@ -299,7 +299,7 @@ function initializeFirebaseAndBookingForm() {
         "Candle workshop": 150.000,
         "Canvas Painting": 200.000,
         "Bracelet-making": 100.000,
-        "Scented Bag": 200.000 
+        "Scented Bag": 200.000
       };
 
       // Function to calculate total amount
