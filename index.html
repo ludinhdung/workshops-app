@@ -390,34 +390,4 @@
 <!-- Google Map -->
 </script>                                             
 <!-- End Google Map -->
-
-<script>
-    // Example amounts for workshops
-    const workshopPrices = {
-        candle: 150000,
-        canvas: 200000,
-        bracelet: 100000
-    };
-
-    // Function to calculate total amount
-    function calculateTotal() {
-        let total = 0;
-        // Add logic to calculate total based on selected workshops
-        // For example, if a user selects a candle workshop:
-        total += workshopPrices.candle; // Adjust this based on user selections
-        return total;
-    }
-
-    document.getElementById('showTotalCheckbox').addEventListener('change', function() {
-        var totalAmountContainer = document.getElementById('totalAmountContainer');
-        var totalAmount = document.getElementById('totalAmount');
-
-        if (this.checked) {
-            totalAmountContainer.style.display = 'block';
-            totalAmount.textContent = calculateTotal(); // Update total amount
-        } else {
-            totalAmountContainer.style.display = 'none';
-        }
-    });
-</script>
 </html>

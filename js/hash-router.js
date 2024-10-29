@@ -170,16 +170,23 @@ const locationHandler = async () => {
       onValue(customersRef, (snapshot) => {
         const data = snapshot.val();
         const workshopCounts = {
-          "Candle workshop": 0,
-          "Canvas Painting": 0,
-          "Bracelet-making": 0,
-          "Fragrant Bag": 0
+          "Candle workshop": { count: 0, totalAmount: 0 },
+          "Canvas Painting": { count: 0, totalAmount: 0 },
+          "Bracelet-making": { count: 0, totalAmount: 0 },
+          "Scented Bag": { count: 0, totalAmount: 0 } // Ensure this matches the category in your data
         };
+
+        // Reset counts to 0 before updating
+        Object.keys(workshopCounts).forEach(key => {
+          workshopCounts[key].count = 0; // Clear counts to 0
+          workshopCounts[key].totalAmount = 0; // Clear total amount to 0
+        });
 
         if (data) {
           Object.values(data).forEach((booking) => {
             if (booking.isPaid) {
-              workshopCounts[booking.category] = (workshopCounts[booking.category] || 0) + 1; // Tăng số lượng cho loại workshop tương ứng
+              workshopCounts[booking.category].count += booking.seats; // Increase seat count
+              workshopCounts[booking.category].totalAmount += booking.totalAmount; // Increase total amount
             }
           });
         }
@@ -187,13 +194,14 @@ const locationHandler = async () => {
         const workshopStatsBody = document.getElementById('workshopStatsBody');
         workshopStatsBody.innerHTML = '';
 
-        Object.entries(workshopCounts).forEach(([category, count]) => {
+        Object.entries(workshopCounts).forEach(([category, { count, totalAmount }]) => {
           const row = document.createElement('tr');
           row.innerHTML = `
             <td>${category}</td>
-            <td>${count}</td>
+            <td>${parseInt(count)}</td>
+            <td>${totalAmount} VND</td> <!-- Display total amount -->
           `;
-          workshopStatsBody.appendChild(row); // Thêm hàng vào bảng
+          workshopStatsBody.appendChild(row); // Add row to the table
         });
       });
     }
@@ -253,14 +261,36 @@ const locationHandler = async () => {
     }
 
     document.getElementById('showTotalCheckbox').addEventListener('change', function () {
-      var totalAmountContainer = document.getElementById('totalAmountContainer');
-      var totalAmount = document.getElementById('totalAmount');
+      const totalAmountContainer = document.getElementById('totalAmountContainer');
+      const totalAmount = document.getElementById('totalAmount');
+      const summaryBooking = document.getElementById("summaryBooking");
+
 
       if (this.checked) {
         totalAmountContainer.style.display = 'flex';
         totalAmount.textContent = calculateTotal() + " VND"; // Update total amount
+
+        const name = document.getElementById("inputName").value;
+        const email = document.getElementById("inputEmail").value;
+        const phone = document.getElementById("inputPhone").value;
+        const date = document.getElementById("inputDate").value;
+        const category = document.getElementById("inputCategory").value;
+        const seats = document.getElementById("inputSeats").value;
+
+        // Generate content based on the input values
+        const generatedContent = `
+          <p>Name: ${name}</p>
+          <p>Email: ${email}</p>
+          <p>Phone: ${phone}</p>
+          <p>Date: ${date}</p>
+          <p>Category: ${category}</p>
+          <p>Seats: ${seats}</p>
+          <i>(Transfer with syntax: Name + Phone Number)</i>
+        `;
+        summaryBooking.innerHTML = generatedContent;
       } else {
         totalAmountContainer.style.display = 'none';
+        summaryBooking.innerHTML = '';
       }
     });
   }
